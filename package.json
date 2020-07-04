@@ -1,0 +1,22 @@
+{
+  "name": "aws-notes",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PrashamTrivedi/AWS_C002_Notes.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/PrashamTrivedi/AWS_C002_Notes/issues"
+  },
+  "homepage": "https://github.com/PrashamTrivedi/AWS_C002_Notes#readme",
+  "devDependencies": {
+    "showdown": "^1.9.1"
+  }
+}

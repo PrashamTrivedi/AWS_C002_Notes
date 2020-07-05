@@ -5,14 +5,48 @@ const fs = require('fs')
 module.exports.exportHtml = () => {
     const currentDir = process.cwd()
     const htmlPath = `${currentDir}/html/`
-    fs.readdirSync(currentDir).filter(file => file.endsWith('.md')).forEach(file => {
+    const filesArr = []
+    fs.readdirSync(currentDir).filter(file => file.endsWith('.md') && !file.startsWith('readme')).forEach(file => {
         const fileData = fs.readFileSync(file).toString()
         const htmlData = converter.makeHtml(fileData)
         if (!fs.existsSync(htmlPath)) {
             fs.mkdirSync(htmlPath)
         }
-        fs.writeFileSync(`${htmlPath}/${file.replace('.md', '.html')}`, htmlData)
+        fs.copyFileSync('./style.css', `${htmlPath}/style.css`)
+        const fileName = `${file.replace('.md', '.html')}`
+        filesArr.push(`
+        <li>
+            <a href="./${fileName}">${fileName.substring(0, fileName.indexOf('.'))}</a>
+        </li>
+        `)
+        const post = `
+                        <html>
+                            <head>
+                                <link rel="stylesheet" href="style.css">
+                            </head>
+                            <body> 
+                                <div class="post">
+                                    ${htmlData}
+                                </div>
+                            </body>
+                        </html>
+                    `
+        fs.writeFileSync(`${htmlPath}/${fileName}`, post)
     })
+    const index = `
+    <html>
+        <head>
+             <link rel="stylesheet" href="style.css">
+        </head>
+        <body> 
+            <h1>Welcome to Prasham's notes.</h1>
+            <ul>
+                ${filesArr.join(`\n`)}
+            </ul>
+        </body>
+    </html>
+    `
+    fs.writeFileSync(`${htmlPath}/index.html`, index)
 
 }
 

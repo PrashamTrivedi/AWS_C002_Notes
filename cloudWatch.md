@@ -35,4 +35,7 @@
 
 - One to one relationship with metric.
 - Setting alarm based on metric.
-- Two states: `OK` and `ALARM`
+- Three states: `INSUFFICIENT DATA`,`OK` and `ALARM`
+    - `INSUFFICIENT DATA`: Usually an initial stage, where alarm can't gather enough data to determine the stage.
+    - `OK`: A stage where metric doesn't create any problem compared to criteria defined in alarm. (E.g. Cost still below defined limit, CPU Usage is not upto defined limit)
+    - `ALARM`: A stage where metric creates a problem compared to criteria defined in alarm. (E.g. Cost going above defined limit, CPU Usage or storage going above defined limit)

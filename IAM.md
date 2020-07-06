@@ -1,5 +1,8 @@
 # IAM
 
+- IAM users are identity used for anything requiring long term access. E.g. Humans, Apps 
+
+
 - Rules applied in this priority order
     - Explicit Deny
     - Explicit Allow
@@ -21,3 +24,26 @@
 
 - AWS manages some default policies
 - We create policies that fit our need.
+
+
+## Authentication vs Authorization
+
+- Authentication: A principal claims to be an entity with valid credentials and should be able to prove this using valid mechanism.
+
+- Authorization: What grants are given to authenticated identity.
+
+## IAM Limits
+
+- 5000 IAM Users per account. 
+- One user can be part of max 10 groups.
+- 300 Groups/account (soft limit)
+- No limit on no of group members
+
+
+## IAM Groups
+
+- Groups are container for users, they don't have own credentials. 
+- No automatic or native group: There is no group which has all users by default. We have to manage it ourselves when need is arised.
+- Groups are flat, they are not nested.
+
+- Resources can have their own policies and they can mention user ARN which has access or denial to that resource. These policies can not mention groups. 

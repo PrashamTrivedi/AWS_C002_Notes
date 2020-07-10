@@ -1,0 +1,22 @@
+name: Create and upload HTML Files
+on: 
+  push:
+    branches:
+      - master
+runs-on: ubuntu-latest
+steps:
+  - name: checkout
+    uses: actions/checkout@v2
+    uses: actions/setup-node@v1
+    with:
+      node-version: '12.x'
+  - name: Install dependencies
+    run: npm install
+  - name: Run build
+    run: npm run build --if-present
+  - name: Upload HTML Files somewhere
+    uses: actions/upload-artifact@v1
+     with:
+          name: nots
+          path: html
+

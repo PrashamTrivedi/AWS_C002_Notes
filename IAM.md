@@ -47,3 +47,15 @@
 - Groups are flat, they are not nested.
 
 - Resources can have their own policies and they can mention user ARN which has access or denial to that resource. These policies can not mention groups. 
+
+# IAM Roles
+
+- Roles are temporary access mechanisms. 
+- Used when more than 5000 users or multiple principals whose number is not known while designing. 
+- IAM Identities represents person, app or service (a.k.a Principal) while role represents level of access.
+
+## Policies of IAM roles.
+- Trust Policy and Permissions Policy
+- Trust Policy Controls which anonymous usage, principals or identity provider can assume the role
+- Permission policy controls what grants this role can have.
+- Based on trust policies when an Identity is able to assume the role, allowed identity gets temporary credentials which expire after certain period of time. After expiry, identitiy needs to re-asssume that role.

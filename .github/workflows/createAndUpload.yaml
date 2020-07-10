@@ -16,7 +16,7 @@ steps:
     run: npm run build --if-present
   - name: Upload HTML Files somewhere
     uses: actions/upload-artifact@v1
-     with:
-          name: nots
-          path: html
+      with:
+        name: nots
+        path: html
 

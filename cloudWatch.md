@@ -1,5 +1,6 @@
 # CloudWatch
 
+- Public Service 
 - 3 Products into one
 - **Metrics**: Data related to AWS Products, other products or on-premises servers
     - Some metrics are gathered natively, anything can be seen in product UI can be gathered natively by cloudwatch

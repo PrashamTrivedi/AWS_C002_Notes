@@ -59,3 +59,15 @@
 - Trust Policy Controls which anonymous usage, principals or identity provider can assume the role
 - Permission policy controls what grants this role can have.
 - Based on trust policies when an Identity is able to assume the role, allowed identity gets temporary credentials which expire after certain period of time. After expiry, identitiy needs to re-asssume that role.
+
+
+# Service Control Policies
+
+- They apply to Organization, Operational Units or Accounts in that organizations.
+- SCP means which policies can be allowed or denied. They are not actual grants.
+- Master account of organization is not affected by any SCPs. It's allowed everything.
+- Default SCP is full aws access.
+- The grants applies to a login is overlap of User's IAM grants and grants allowed from SCP.
+    - E.G.: If SCP allows S3,ElastiCache and EC2 Access and IAM allows S3,RDS and EC2 access, user can only use S3 and EC2. 
+    - Though user can use RDS by IAM grants, but SCP has implicit deny on RDS user can't use RDS when accessing through organization.
+    - Same way user can use ElastiCache by SCP grants, but IAM has implicit deny on ElastiCache user can't use ElastiCache.

@@ -25,6 +25,13 @@
 - AWS manages some default policies
 - We create policies that fit our need.
 
+## IAM Policies Vs Resource Policies
+- IAM Policies are attached to principals, Resource policies are attached to resource.
+- IAM Policies dictate what a principal can access, Resource policies dictate who can access the resource.
+- IAM Policies are only attached to principals of your own account, Resource policies can allow or deny own account or other account.
+- IAM Policies are attached to a principal thus anonimity is not possible. While Resource policies can allow/deny anonymous principals.
+- Resource Policy has Principal value attached to it, can allow which principal is allowed/denied this resource. IAM Policy doesn't have this principal value.
+
 
 ## Authentication vs Authorization
 

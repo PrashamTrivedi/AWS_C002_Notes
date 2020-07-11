@@ -48,6 +48,19 @@ module.exports.exportHtml = () => {
     `
     fs.writeFileSync(`${htmlPath}/index.html`, index)
 
+    const error = `
+    <html>
+     <head>
+             <link rel="stylesheet" href="style.css">
+        </head>
+        <body>
+            <h1>Something has gone wrong. If you are not sure where to go, there is already an <a href='./index.html'>Index Page</a>.</h1>
+           
+        </body>
+    </html>
+    `
+    fs.writeFileSync(`${htmlPath}/error.html`, error)
+
 }
 
 module.exports.exportHtml()

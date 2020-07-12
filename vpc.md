@@ -23,7 +23,7 @@ title: Notes on VPC
         - Alloted entities control 3 bits of Address
     - B Range: 128.0.0 to 191.255.255.255
         - 16,000 networks can be assigned (Each entity gets 65,536 IPS)
-        - 128.0.X.X, 128.1.X.X .... 191.255.X.X 
+        - 128.0.X.X, 128.1.X.X to 191.255.X.X 
         - Alloted Entities control 2 bits of Address
     - C Range: 192.0.0.0 to 223.255.255.255
         - 256 Addresses per network

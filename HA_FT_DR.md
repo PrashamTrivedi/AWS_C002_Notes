@@ -1,7 +1,11 @@
-# High Availibility, Fault Tolerance and Disaster Recovery
+---
+title: High Availalility, Fault Tolerance and Disaster Recovery
+---
 
-## High availibility (HA)
-- High availibility means ensuring agreed level of uptime, for higher than normal period.
+# High Availability, Fault Tolerance and Disaster Recovery
+
+## High availability (HA)
+- High availability means ensuring agreed level of uptime, for higher than normal period.
 - Some disruptions are allowed, like re-logging in, some level of (recoverable) data loss etc.
 
 
@@ -15,7 +19,7 @@
 - HA is less severe problem, FT is much complex.
 - HA is like changing a punctured tire of car, and FT is like extra engine in a plane.
 
-- Mission critical systems must be Fault Tolerant. While regular systems can only go till the High Availibility Zones
+- Mission critical systems must be Fault Tolerant. While regular systems can only go till the High availability Zones
 
 ## Disaster Recovery
 - Set of policies, tools and procedures to enable recovery or continuation of vital components and infrastructures following a disaster. 

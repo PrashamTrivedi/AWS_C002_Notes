@@ -1,3 +1,7 @@
+---
+title: Notes on Cloudtrail
+---
+
 # Cloudtrail
 
 - Almost anything that can be done to an AWS Account is logged by cloudtrail

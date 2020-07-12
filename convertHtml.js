@@ -1,5 +1,5 @@
 const showdown = require('showdown')
-const converter = new showdown.Converter({tables: true, strikethrough: true})
+const converter = new showdown.Converter({tables: true, strikethrough: true, openLinksInNewWindow: true, metadata: true})
 const fs = require('fs')
 
 module.exports.exportHtml = () => {
@@ -8,7 +8,11 @@ module.exports.exportHtml = () => {
     const filesArr = []
     fs.readdirSync(currentDir).filter(file => file.endsWith('.md') && !file.startsWith('readme')).forEach(file => {
         const fileData = fs.readFileSync(file).toString()
+
         const htmlData = converter.makeHtml(fileData)
+        // console.log(htmlData)
+        const metadata = converter.getMetadata()
+        const title = metadata.title
         if (!fs.existsSync(htmlPath)) {
             fs.mkdirSync(htmlPath)
         }
@@ -16,15 +20,18 @@ module.exports.exportHtml = () => {
         const fileName = `${file.replace('.md', '.html')}`
         filesArr.push(`
         <li>
-            <a href="./${fileName}">${fileName.substring(0, fileName.indexOf('.'))}</a>
+            <a href="./${fileName}">${title}</a>
         </li>
         `)
         const post = `
                         <html>
                             <head>
+                                <title>
+                                ${title}
+                                </title>
                                 <link rel="stylesheet" href="style.css">
                             </head>
-                            <body> 
+                            <body>
                                 <div class="post">
                                     ${htmlData}
                                 </div>

@@ -1,3 +1,7 @@
+---
+title: Notes on Infrastructure
+---
+
 # Notes related to infrastructure.
 
 

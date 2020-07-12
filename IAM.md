@@ -1,3 +1,7 @@
+---
+title: Notes on IAM
+---
+
 # IAM
 
 - IAM users are identity used for anything requiring long term access. E.g. Humans, Apps 

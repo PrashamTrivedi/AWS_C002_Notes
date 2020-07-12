@@ -1,3 +1,7 @@
+---
+title: DNS Types (Extra)
+---
+
 # Type of DNS record
 
 - `NS`: Nameserver records. Points server for DNS records.

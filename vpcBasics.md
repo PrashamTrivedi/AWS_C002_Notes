@@ -1,3 +1,7 @@
+---
+title: Basic Notes on VPC
+---
+
 # VPC Basics.
 
 - Two types of VPCs. One default and other customizable.

@@ -1,3 +1,7 @@
+---
+title: Notes on Shared Responsibility
+---
+
 # Shared responsibility.
 
 Responsibiltiy is shared between AWS and Customer.

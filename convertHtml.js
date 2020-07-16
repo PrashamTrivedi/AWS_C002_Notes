@@ -1,4 +1,7 @@
 const showdown = require('showdown')
+
+
+
 const converter = new showdown.Converter({tables: true, strikethrough: true, openLinksInNewWindow: true, metadata: true})
 const fs = require('fs')
 
@@ -6,11 +9,12 @@ module.exports.exportHtml = () => {
     const currentDir = process.cwd()
     const htmlPath = `${currentDir}/html/`
     const filesArr = []
+
     fs.readdirSync(currentDir).filter(file => file.endsWith('.md') && !file.startsWith('readme')).forEach(file => {
         const fileData = fs.readFileSync(file).toString()
 
-        const htmlData = converter.makeHtml(fileData)
-        // console.log(htmlData)
+        let htmlData = converter.makeHtml(fileData)
+        htmlData = htmlData.split(".md").join(".html")
         const metadata = converter.getMetadata()
         const title = metadata.title
         if (!fs.existsSync(htmlPath)) {
@@ -19,7 +23,7 @@ module.exports.exportHtml = () => {
         fs.copyFileSync('./style.css', `${htmlPath}/style.css`)
         const fileName = `${file.replace('.md', '.html')}`
         filesArr.push(`
-        <li>
+        <li class="navLinks">
             <a href="./${fileName}">${title}</a>
         </li>
         `)
@@ -32,6 +36,10 @@ module.exports.exportHtml = () => {
                                 <link rel="stylesheet" href="style.css">
                             </head>
                             <body>
+                                <div >
+                                    <a class="navLinks" href="./index.html">Home</a>
+                                    <a class="navLinks" href="https://github.com/PrashamTrivedi/AWS_C002_Notes">Repository and Original Notes in Markdown</a>
+                                </div>
                                 <div class="post">
                                     ${htmlData}
                                 </div>

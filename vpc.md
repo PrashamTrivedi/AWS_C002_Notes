@@ -5,15 +5,32 @@ title: Notes on VPC
 # VPC.
 
 - Two types of VPCs. One default and other customizable.
-- Each region can have one default VPC
-- Each region can have many customisable VPC
-- Default VPC is rigid. While customisables are as name suggests, customisable.
+- Regionally isolated and regionally resiliant.
+- Each VPC is isolated with each other by default. Nothing is allowed  
+- VPCs are created in reagion and operates from all AZs of that region.
+- Each region can have one default VPC.
+- Each region can have many customisable VPC.
+- Default VPC is rigid. While Custom VPCs are as name suggests, customisable.
+    - Customizations inculde: IP range, multi tier VPCs, networking options etc
 - IP Range (CIDR) of Default VPC 172.31.0.0/16. 
 - Subnet has their own ip range of /20 based on number of subnets.
 - Lesser the number after /, more IPs are available. For /16 they have 65,536 IPs available, for /20 they have 4,096 IPs available.
 - /16 can have double IPs than /17 and can half IPs than /15. 
 - IGW (Internet Gateway-Allows internet to communicate to VPC & Vice-versa), Security Group (SG), Network ACL (NACL) come pre-configured in default VPC.
 - Anything deployed in Default VPC will have public IPV4 Address.
+- VPC CIDR Range minimum /28 (16 IP) and Max /16
+
+- Custom VPC Default vs dedicated tenancy.
+    - Default Tenancy: Shared Hardware. Later on it can be changed per resource
+    - Dedicated Tenancy: Dedicated Hardware. Locked in for a lifetime of the VPC. Costlier than default.
+
+## DNS in VPC
+- Provided by [Route 53](./route53.md)
+- VPC `BASE + 2` Address. (E.g. Base VPC Address is `10.0.0.0` then DNS is `10.0.0.2`)
+- `enableDnsHostNames`: Whether instances in Public VPC are given public host names or not. 
+- `enableDnsSupport`: Whether DNS is enabled or disabled on VPC.
+
+
 
 ### Networking Refresher
 - IP Networks are split in 5 classes. 
@@ -21,13 +38,16 @@ title: Notes on VPC
         - 128 Class A networks can be assigned (Each Entity assigned gets 16.8 Million IPs)
         - from 0.X.X.X to 127.X.X.X
         - Alloted entities control 3 bits of Address
+        - /8 in CIDR
     - B Range: 128.0.0 to 191.255.255.255
         - 16,000 networks can be assigned (Each entity gets 65,536 IPS)
         - 128.0.X.X, 128.1.X.X to 191.255.X.X 
         - Alloted Entities control 2 bits of Address
+        - /16 in CIDR
     - C Range: 192.0.0.0 to 223.255.255.255
         - 256 Addresses per network
         - Alloted Entities cotrol only last bit of address.
+        - /32 in CIDR
     - D & E Ranges are ignored for SAA
 
 - Certain Ranges are allocated for private use. 

@@ -32,6 +32,66 @@ title: Notes on VPC
 
 
 
+## VPC Subnets
+- A Subnetwork of VPC withhin a particular AZ.
+- AZ Resiliant, Subnet is created in one AZ and it can never be changed.
+- AZ has many to one relationship with Subnets. 
+    - One subnet can only be in one AZ
+    - One AZ can have 0 or more subnets.
+- Two subnets of one VPC can communicate with each other.
+- 5 IPS are resereved in each subnet. `10.16.16.0/20`
+    - First address(e.g. `10.16.16.0`) is a network address. 
+    - `Network Address + 1` (e.g. `10.16.16.1`) is a VPC router.
+    - `Network Address + 2` (e.g. `10.16.16.2`) is reserved by AWS for DNS
+    - `Network Address + 3` (e.g. `10.16.16.3`) is reserved for future use.
+    - `Broadcast` address, which is last address in range. (e.g. `10.16.31.255`)
+- DHCP (Dynamic Host control protocol). That's how computing devices receive IP Address automatically.
+    - One DHCP configuration applies to one VPC and this applies to all subnets.
+    - DHCP configuratoins can not be edited. We have to create new DHCP config and applied to VPC.
+    - Auto Assign public IPV4 option, if checked it will automatically assign public IP address of IPV4 type.
+
+
+## VPC Router.
+- Every VPC has one VPC router
+- It's highly available. 
+- Routes traffic between subnets.
+- Controlled by route tables, and each subnet has one router.
+- Main route table is subnet default.
+- Subnet can has only one route table with it. But one route table can be associated with multiple subnets.
+- When IP Packet (A Packet contains source, destination and data) leaves Subnet, router table is used.
+- Entry in destination is matched with destination source of IP Packet.
+- On multiple matches, entry with local route is matched first, for anything else entry with higher prefix value is matched.
+    - Like for following scenario
+        - **IP Packet**: `src:{whatever}`,`destination:10.160.32.255`,`data:{whatever}`.
+        - **Routing Data**: 
+            - `10.160.32.0/30` has setting A. 
+            - `10.160.0.0/16` has setting B and 
+            - `0.0.0.0/0` (Public access) has setting C. 
+        - In this case setting A is applied because this entry is more narrowly downed to IP, indicated by higher prefix.
+
+### Routing table.
+- **Destination**: Destination denoted by IP CIDR. 
+- **Target**: Target of destination, it either points at AWS Gateway or local.Value  `local` means VPC itself.
+- 
+
+
+## Internet Gateway
+- **Regionally resiliant** gateway attached to VPC.
+- One to one relationship between VPC and Internet Gateway. 
+    - One VPC can have 0 or 1 Internet Gateway
+    - One Internet Gateway can be attached to 0 or 1 VPC.
+- Gateways traffic betwen VPC and Internet or AWS public zone like (S3, SNS, SQS etc...)
+- Managed by AWS
+
+
+
+## Bastion Host/Jumpbox
+- An instance in public subnet.
+- Incoming management connections arrive here, then access internal only VPC address.
+- Bastian Host/Jumpbox/Jumpserver is only way IN to VPC.
+
+
+
 ### Networking Refresher
 - IP Networks are split in 5 classes. 
     - A Range: 0.0.0.0 to 127.255.255.255
@@ -63,4 +123,4 @@ title: Notes on VPC
     - E.g. Splitting the range of ips of /16 to 4 networks of /18 is called subnetting.  
 
 - Private Addresses can communicate with internate using NAT (Network Address Translation)
- 
+- When something (Like EC2 instance) has public IPV4, that entity does not "have" a public IPV4. An entry of that entity's private IPV4 is mapped in Internet Gateway with a public IPV4 address.

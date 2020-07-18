@@ -1,7 +1,16 @@
 body{
-    font: 1em sans-serif;
+  font-family: 'Roboto', sans-serif;
+
 }
 
 .navLinks{
     padding: 5px;
+}
+
+code {
+  background-color: #eee;
+  color: blue;
+  padding: 3px 2px;
+  margin: 2px;
+
 }

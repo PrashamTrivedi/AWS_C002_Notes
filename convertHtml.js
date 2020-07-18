@@ -33,6 +33,7 @@ module.exports.exportHtml = () => {
                                 <title>
                                 ${title}
                                 </title>
+                                <link href="https://fonts.googleapis.com/css2?family=Roboto&family=Roboto+Condensed&display=swap" rel="stylesheet">
                                 <link rel="stylesheet" href="style.css">
                             </head>
                             <body>
@@ -66,6 +67,7 @@ module.exports.exportHtml = () => {
     const error = `
     <html>
      <head>
+     <link href="https://fonts.googleapis.com/css2?family=Roboto&family=Roboto+Condensed&display=swap" rel="stylesheet">
              <link rel="stylesheet" href="style.css">
         </head>
         <body>

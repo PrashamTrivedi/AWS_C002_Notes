@@ -72,7 +72,7 @@ title: Notes on VPC
 ### Routing table.
 - **Destination**: Destination denoted by IP CIDR. 
 - **Target**: Target of destination, it either points at AWS Gateway or local.Value  `local` means VPC itself.
-- 
+
 
 
 ## Internet Gateway
@@ -82,6 +82,8 @@ title: Notes on VPC
     - One Internet Gateway can be attached to 0 or 1 VPC.
 - Gateways traffic betwen VPC and Internet or AWS public zone like (S3, SNS, SQS etc...)
 - Managed by AWS
+- Private Addresses can communicate with internet using NAT (Network Address Translation)
+- When something (Like EC2 instance) has public IPV4, that entity does not "have" a public IPV4. An entry of that entity's private IPV4 is mapped in Internet Gateway with a public IPV4 address.
 
 
 
@@ -121,6 +123,3 @@ title: Notes on VPC
 - E.g. Prefix of 16 have double the networks than 17 and half the networks than 15s.
 - Spliting a network of IPs to smaller networks using prefixes is called subnetting.
     - E.g. Splitting the range of ips of /16 to 4 networks of /18 is called subnetting.  
-
-- Private Addresses can communicate with internate using NAT (Network Address Translation)
-- When something (Like EC2 instance) has public IPV4, that entity does not "have" a public IPV4. An entry of that entity's private IPV4 is mapped in Internet Gateway with a public IPV4 address.

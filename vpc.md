@@ -6,12 +6,13 @@ title: Notes on VPC
 
 - Two types of VPCs. One default and other customizable.
 - Regionally isolated and regionally resiliant.
-- Each VPC is isolated with each other by default. Nothing is allowed  
+- Each VPC is isolated with each other by default. Nothing is allowed.
 - VPCs are created in reagion and operates from all AZs of that region.
 - Each region can have one default VPC.
 - Each region can have many customisable VPC.
 - Default VPC is rigid. While Custom VPCs are as name suggests, customisable.
     - Customizations inculde: IP range, multi tier VPCs, networking options etc
+- Default VPC can be recreated.
 - IP Range (CIDR) of Default VPC 172.31.0.0/16. 
 - Subnet has their own ip range of /20 based on number of subnets.
 - Lesser the number after /, more IPs are available. For /16 they have 65,536 IPs available, for /20 they have 4,096 IPs available.
@@ -93,8 +94,64 @@ title: Notes on VPC
 - Bastian Host/Jumpbox/Jumpserver is only way IN to VPC.
 
 
+## NACL(Network Acceess control list)
+- Controls any request that crosses the subnet boundry. Like a firewall which can filter traffic that enters or leaves the subnet.
+- Rules are proceessed in order. Lower number of rule is applied first.
+- When rule is matched, action (Allow/Deny) is taken and processing stops.
+- Fields: Type, Protocol, Port Range and Source (For inbound rule) or destination (for outbound rule).
+- If all fields are matched, then that rule is matched. If multiple rules are matched, the rule with lower number is applied.
+- Two default NACL rules
+    - One with * rule, which explicitly denys everything and can never be edited. This applies if no other rule can be applicable.
+    - The other rule, which is 100 rule, explicitly allows everything. This rule can be edited or deleted.
+- NACL are stateless: It sees INITIATION and RESPONSE part of same communication as different streams. That forces us to add two separate rules.
+- NACL only activates when data crossed subnet boundry. If data is not crossing subnet boundry, no rules are applied.
+- NACL only supports IPs, networks, ports & protocols. It can not operate on AWS logical resources by default.
+- **NACL can only be assinged to subnets and nothing else.**
+- NACL are only networking entity that can explicitly deny anything.
+- One Subnet can only have one NACL. 
+- Each subnet has default NACL, if we apply any custom NACL, default one unapplies, and if we remove any custom NACL, default one reapplies automatically.
+- One NACL can be applied to multiple subnets.
 
-### Networking Refresher
+## Security Groups
+- Almost every AWS service has a network interface attached with it. Communication is done via that network interface.
+- Security Groups are attached to that given network interface instead of subnet. I.E. Security groups are attached to AWS services.
+- Security Groups are stateful. They can see INITIATION and RESPONSE part as same communication.
+    - Inbound rule of same communication is automatically applied to outbound rule. No need to set two rules.
+- In security group we can mention AWS resource. 
+    - AWS Resources, other security groups and themselves.
+    - E.g. Default security group mentions itself as inbound security rule which allows incoming traffic. Means anything attached to this security group can communicate freely with each other.
+- Security Group has default implicit deny. If not mentioned anything it denies the network. NACL does not have hidden denies.
+- Security Group can't explicitly deny. NACL can.
+- That can create a problem. Like if we allow **all incoming traffic for tcp on port 443 (which is https), we can't deny any bad actor connecting through https**. For that we can use NACL to explicitly deny before the bad actor tries to enter subnet.
+- NACL on subnet for any product which don't work with Security groups. Like NAT Gateway.
+- **Rule Of Thumb**:
+    - Use security groups everywhere, except.
+    - The resources (Like NAT Gateway) don't support them or.
+    - We want to explicitly deny a bad actor (bad IP or bad user).
+    - In above cases we have to use NACL.
+
+
+## NAT (Network Address Translation) Gateways
+- Process of giving private resource outgoing only access to the internet.
+- A set of process which remaps source or destination addresses.
+- `IP Masquerading`: Hiding whole IPV4 CIDR behind one public IPV4.
+- Useful for giving private CIDR giving outgoing only internet/public aws zone access.
+- Runs from a public subnet.
+- Use Elastic IPs.
+- AZ resiliant, and highly available there.
+- For region resiliance, NAT Gateway needs to be deployed in each AZ. And route table in for each AZ with that NAT Gateway as target.
+- Chargable: Hourly charge per NAT Gateways. And data processing charge per GB.
+- There can also be NAT Instance. An EC2 instance configured specially for NAT. ANd for that we need to disable `source/destination checks`. Otherwise any data for which, that instance is neither source or destination, will be dropped.
+- NAT Instances are not as highly available or highly resiliant as NAT Gateways. But they're lot cheaper compared to NAT Gateway. 
+- NAT Instances are regular EC2 instances so we can use them as Bastion Hosts (Jump servers) or use port forwarding there. NAT Gateways does not have this level of management. Everything there is managed by AWS.
+- NAT Instances can use Security Groups as well as NACLs, while NAT Gateways only use NACLs.
+- **All IPV6 Addresses inside AWS are publically routable**.
+
+
+
+
+
+# Networking Refresher
 - IP Networks are split in 5 classes. 
     - A Range: 0.0.0.0 to 127.255.255.255
         - 128 Class A networks can be assigned (Each Entity assigned gets 16.8 Million IPs)
@@ -117,7 +174,7 @@ title: Notes on VPC
     - 16 Class B (172.16.0.0 to *172.31*.255.255)
     - 256 Class C (192.168.0.0 to 192.168.255.255)
 
-#### CIDR (Classles inter-domain routing)
+## CIDR (Classles inter-domain routing)
 - Network Address + / + prefix (size of network.)
 - Prefix of one nuber is half than prefix of the number before it.
 - E.g. Prefix of 16 have double the networks than 17 and half the networks than 15s.

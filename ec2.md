@@ -202,4 +202,121 @@ title: Notes about EC2
 - Rigid Lifecycle link with Storage <-> Instance. I.E. Data must be cleared once instance is removed.
 
 
+## EBS Encryption
+- Has At rest encryption (Just like any other disks)
+- Use [KMS](./kms.md) for encryption. Either creates own managed key (`aws/ebs`) or uses customer managed key.
+- CMK generates encrypted DEK which is stored in EBS volume. 
+- When the EBS is mounted and used in an instance, EBS gives asks KMS to decrypt DEK.
+- KMS sends decrypted DEK to EC2 Host, which stores decrypted key in memory.
+- When an instance running that encrypted EBS running in that host, it used memory stored Decrypted key to encrypt and depcrypt data.
+- Snapshot is encrypted with same DEK. Any restoration from the snapshot uses same DEK.
+    - Unless we change CMK when creating new volume from snapshot.
+- Accounts setting to encrypt EBS by default, using default CMK by default, can override using other CMK.
+- Each volume (created from scratch) has it's own uniqe DEK.
+- **Encrypted volume stay encrypted for lifetime. We can't change a volume not to be encrypted**.
+- **OS isn't aware of any encryption, so there is no performance loss for EBS encryption**.
+
+## EC2 Network & DNS Architecture
+- Each instnace has atlease one Elastic Network Interface or ENI.
+- We can have more than one ENI, which can be on other Subnet. But all ENI should be in same AZ.
+- ENI can have properties 
+    - MAC address
+    - Primary IPV4 private IP from available subnet IP range. 
+        - Doesn't change for lifetime of the instance.
+    - 0 or more secondary private IP address. 
+    - 0 or 1 public IP address. 
+        - It's public for outside of VPC, inside VPC it's always private address.
+    - 1 Elastic IP per private IPv4 address.
+        - We can associate IP with primary interface or secondary interface.
+        - When asosciation is done with primary interface it removes public IPV4 and replaces with Elastic IP.
+    - 0 or more IPv6 Addresses.
+    - Security Groups.
+    - Source/Destination check.
+- Secondary ENIs can be detached from and moved to other instances.
+- Secondary ENI + MAC address  = Licensing
+    - Many licensing is done based on mac addresses.
+    - If we use secondary ENI's mac address for license, we can move this license to multiple instances using secondary ENI.
+- Multihome ENI for management and Data.
+    - Multihome = Connecting a machine to multiple networks at once.
+    - Instance with two ENIs in two subnets. One for management and other for data.
+- **EC2 Instance OS never sees public IPV4 address**. It has private IPV4 address, and public address is managed by [VPC](./vpc.md)
+- IPV4 public address are dynamic, change everytime it changes the host. Like stopping and starting instance. 
+    - To avoid this, allocate and assign Elastic IP address.
+
+
+# AMI (Amazon Machine Image)
+- Images of EC2. Template of instance configuration and using that template to create as many instances.
+- Can be used to launch EC2 instances.
+- AWS Provided or Community Provided or Marketplace Provided (can include commercial software)
+- **Regional.**
+    - AMI is unique per region and can only be used in region it's created.
+- AMI can control permissions.
+
+## AMI Lifecycle
+- Launch
+    - We create instance from existing AMIs 
+    - Add EBS with them.
+    - Which leads to...
+- Configure
+    - We add extra configuration the instance like other storage or software with license.
+    - Which leads to...
+- Create Image
+    - Creating AMI.
+    - Current snapshots of EBS is being taken and mapped to AMI.
+    - Account setting is stored in AMI.
+    - Which leads to...
+- Launch: Launching the inscance from AMI.
+
+- **AMI Baking:** Createing AMI from configured instance + application. Like installing wordpress on an Instance and creating AMI from it.
+- **AMI can't be edited**, configuration can be changed before launching instance.
+- **AMI can be copied between regions**.
+- **Default AMI permission: Creator account.**
+
+
+## Instance Billing methods
+- On-Demand Instances
+- Spot Instances
+- Reserved Instance
+
+### On Demand Instances
+- Instance have hourly rate.
+- Billed on seconds (60 Seconds minimum) or hourly. It's based on OS.
+- Default model.
+- No long-term commitment and upfront payments.
+- Good for New or Uncertain requirements.
+- Short-Term, Spiky or unpredictable workloads that **can't tolerate any disruption.**
+
+### Spot Instance
+- Cheapest way to access EC2 instances.
+- 90% off vs On-demand.
+- Spot Price is set by EC2 - **based on spare capacity**.
+- We **specify max price** we pay.
+- If spot price goes above max price, instance terminates.
+- Good For Apps that have flexible start and end times. (Like lazy analysis).
+- Apps which only make sense at low cost.
+- **App need to be able to tolerate failure**.
+
+
+### Reserved Instances.
+- Upto 75% discuout. Require Commitment.
+- 1 or 3 years, All Upfront, Partial Upfront or No Upfront. 3 years have better discount.
+- 3 years + All Upfront offer better discount. 
+- If not paying all upfront, we have to pay hourly rate **regardless of instance running or not**.
+- Reserved in region, or AZ with capacity reservation.
+    - When we reserve instance in AZ, it also reserves capacity.
+    - When we reserve instance in region, we can apply this reservation in all applicable instances.
+- When capacity issues is there before starting up. Reserved Instance has higher priority followed by On-Demand and then Spot instances.
+- Scheduled reservation.
+- Good for: Known steady state usage.
+- Cheapest for apps that can't handle disruption.
+
+## Status checks and auto recovery.
+- Every instance has two default checks.
+- System Status Checks:
+    - Loss of power, Network connectivity or software or hardware issues within EC2 hosts.
+- Instance status checks:
+    - Corrupt file system, Incorrect instance networking or kernel issues.
+- Recovery won't work with instance store volumes. 
+
+
 

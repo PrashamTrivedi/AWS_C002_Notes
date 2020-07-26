@@ -101,7 +101,6 @@ title: Notes about EC2
 ## GP2 Storage
 - Default for almost all normal usage.
 - Uses performance bucket architecture based on IOPS it can deliver.
--
 - Starting range is 5.4 Million IOPS Credited by default. And we can increase or decrease performance based on usecase.
     - This default range is enough to have a burst perforamance of 3000 IOPS for 30 Minutes.
 - Minimum 100 IOPS are credited per second and after that it increases @ 3 IOPS credit per GiB of volume upto 16,000 IOPS. 
@@ -318,5 +317,41 @@ title: Notes about EC2
     - Corrupt file system, Incorrect instance networking or kernel issues.
 - Recovery won't work with instance store volumes. 
 
+## Horizontal and vertical scaling.
+- Scaling: System needs to grow or shrink depending on increasing or decreasing workload.
+- Grow = Adding resource, Shrink = Removing resource.
+
+- Horizontal Scaling: Require more clones to fight for republic in [Clone Wars](https://en.wikipedia.org/wiki/Star_Wars:_The_Clone_Wars_(2008_TV_series)). As easy as [ordering new clones to be generated in Kamino](https://en.wikipedia.org/wiki/Star_Wars:_Episode_II_%E2%80%93_Attack_of_the_Clones).
+- Vertical Scaling: When the law is applicable only to a City, a Mayor is responsible to enforce it. When same law is applicable to state, the responsibility goes to Chief Minister (Or Governor) of state. And same law is applicable to whole nation, Prime Minister or President is responsible to enforce the law.
 
 
+## Vertical scaling
+- Using service with more resources.
+- When load increases, we move from 2 core CPU-8GiB Storage to 4 Core CPU - 16 GiB storage and further.
+    - Like `t3.large` to `t3.xlarge` and `t3.2xlarge`.
+- Each resizing requires a reboot, means downtime and disruption.
+- Larger instance can charge premium.
+- Upper cap on max performance = max instance size available.
+- No app modification required.
+- Works for all apps.
+
+## Horizontal Scaling.
+- Adding more instances.
+- Requires Load Balancer.
+    - Load balancer randomised which instance gets incoming traffic when your customer interacts with app.
+- Sessions are everything, and they needs to be split accross instances.
+    - A customr looking at product, adding item to cart can both be done in different instances, but they have to be in same session.
+- Requires app support or `off-host sessions`.
+- No disruptuon while scaling.
+- No real performance limits.
+- Less expensive. No large instace premium.
+- More granular scaling, limited with smaller instance available.
+
+
+## Instance Metadata
+- EC2 service provides data to all instances.
+- Available to all instances.
+- `http://169.254.169.254/latest/meta-data/` to access all instance metadata from the instance.
+- 169.254 repeated, with latest meta hyphen data.
+- As said [above](#ec2networkdnsarchitecture), OS does not know about public IP address. But we can query this using latest meta-data.
+- **Metadata service has no authentication and it's not encrypted.**

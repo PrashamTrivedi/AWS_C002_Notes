@@ -4,7 +4,8 @@ body{
 }
 
 .navLinks{
-    padding: 5px;
+    padding: 8px;
+    margin: 5px;
 }
 
 code {

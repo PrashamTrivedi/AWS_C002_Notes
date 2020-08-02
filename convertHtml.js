@@ -4,6 +4,7 @@ const showdown = require('showdown')
 
 const converter = new showdown.Converter({tables: true, strikethrough: true, openLinksInNewWindow: true, metadata: true})
 const fs = require('fs')
+const {create} = require('domain')
 
 module.exports.exportHtml = () => {
     const currentDir = process.cwd()
@@ -12,6 +13,8 @@ module.exports.exportHtml = () => {
 
     fs.readdirSync(currentDir).filter(file => file.endsWith('.md') && !file.startsWith('readme')).forEach(file => {
         const fileData = fs.readFileSync(file).toString()
+        const createdOn = fs.statSync(file).birthtime
+        const updatedOn = fs.statSync(file).ctime
 
         let htmlData = converter.makeHtml(fileData)
         htmlData = htmlData.split(".md").join(".html")
@@ -24,7 +27,10 @@ module.exports.exportHtml = () => {
         const fileName = `${file.replace('.md', '.html')}`
         filesArr.push(`
         <li class="navLinks">
+            <div>
             <a href="./${fileName}">${title}</a>
+            </div>
+            Created on: <b>${createdOn.getDate()}/${createdOn.getUTCMonth() + 1}/${createdOn.getFullYear()}</b>, Last modified on: <b>${updatedOn.getDate()}/${updatedOn.getUTCMonth() + 1}/${updatedOn.getFullYear()}</b>
         </li>
         `)
         const post = `
@@ -39,6 +45,7 @@ module.exports.exportHtml = () => {
                             <body>
                                 <div >
                                     <a class="navLinks" href="./index.html">Home</a>
+                                    <a class="navLinks" href="https://prashamhtrivedi.in">Parent Site</a>
                                     <a class="navLinks" href="https://github.com/PrashamTrivedi/AWS_C002_Notes">Repository and Original Notes in Markdown</a>
                                 </div>
                                 <div class="post">

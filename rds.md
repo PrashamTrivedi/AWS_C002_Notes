@@ -124,3 +124,94 @@ title: Notes on RDS.
 - Once read replicas are promoted to Read write instances, it can not be reverted back to read-replicas.
 
 
+
+# Aurora Architecture
+- Part of RDS, but distinct from normal RDS.
+- Uses a Cluster.
+- Single Primary Instance + 0 or more replicas.
+    - These replicas can be read during normal operation. Mixes Multi AZ + Read replicas.
+- No local storage of instance, instead it uses shared cluster volume.
+- Aurora Cluster can function across number of AZ.
+- SSD Based storage. 
+    - High IOPS and Low Latency.
+- Max 64 TiB.
+- Has 6 Replicas and available across multiple AZs.
+- Syncronous Replication happens at the storage level.
+- Storage system is much more resiliant than RDS. 
+    - It can automatically detect and repair storage corruption.
+    - It can fastly restore the data from other replicas.
+- Aurora can have upto 15 replicas and any of them can be a failover target.
+- Storage is billed based on **what's used**.
+- High Watermark: Billed for most used. 
+    - E.G. If we store 20 GB today, we will be billed for 20 GB in current month, even if we removed 10 GB in an hour. We will be billed for 10 GB for next month if it's max storage.
+    - If we needed 5 GB tomorrow, we can also re-use that storage.
+- Replicas can be added and removed without requiring storage provisioning.
+- Unlike RDS, Aurora Cluster have multiple endpoint. 
+- Cluster Endpoint and Reader Endpoint.
+    - Clustre Endpoint always points to primary instance, used for R/W Operations.
+    - Reader Endpoint points to read-only replicas, and if there are multiple, load balancing happens.
+- We can also create custom endpoints.
+- Each instance have their own unique endpoints.
+- **No Free tier option**.
+- Beyond Single AZ, Aurora offers better value compared to RDS.
+- Compute: Hourly charge, per second, 10 minute minimum.
+- Storage: GB-Month consumed, IO Cost per request.
+- 100% DB Size in backup are included in cost.
+- Backups works same way as RDS
+- Restore creates a new cluster.
+- Backtrack can be use as a in-place-rewind to a previous point in time. Reduce RPO and RTO. 
+    - Need to enable per cluster base.
+- Fast Clone makes a new DB: Much faster than Copying all the data. It stores the difference.
+
+
+## Aurora Serverless
+- We don't need to provision resources like aurora provisioned.
+- It uses ACU (Aurora Capacity Units)
+- We create a cluster and provide min and max ACU and cluster scales up and down based on these values and load.
+- ACU can go down to 0 and can be paused, when done that, we only pay for storage.
+- Consumption billing per second basis.
+- Same resiliance as Aurora Provisioned.
+- ACU are allocated from AWS hot pool, they don't have their own storage. They use cluster storage.
+- New ACUs can be allocated when load increases and any old ACUs which are unused can be de-allocated from cluster.
+- Connections are done with shared proxy fleet, which is transparent to us.
+- Use Case: 
+    - Infrequently used applications.
+    - New Applications.
+    - Variable workloads.
+    - Unpredictable workloads.
+    - Dev and Test DB.
+    - Multi-Tenant Apps.
+
+## Aurora Global
+- We can replicate Aurora Globaly from Master region to 5 secondary regions.
+- Master region can have 1 read/write and 15 read only replicas, while secondary region have all 16 read only replicas.
+    - All of those can be promoted to r/w.
+    - RPO and RTO are low.
+- Replication occurs at storage layer, happens within 1 second on primary region.
+- Usecase
+    - Cross-Region disaster recovery and business continuity.
+    - Global read scaling- low latency performance improvements.
+
+## Aurora Multi-Master writes
+- Default mode
+    - Single master
+    - 1 R/W 0+ read replicas.
+    - Cluster endpoint for write, read endpoint is load balanced.
+- Multi-Master all instances are R/W.
+- App is responsible to connect all/one write db. There is no load balancing.
+- When one instance has write operation it tries to write to all storage available to all masters.
+- Storage can accept or reject the operation.
+- Replication also done to other master's read only memory.
+
+## DB Migration Services
+- A managed DB Migration service.
+- Runs using replication instance.
+    - Runs 1+ replication tasks, where all configuration is defined.
+    - We need to provide source and destination endpoints pointing to Source and Destination db.
+    - Atleast one of those must be on AWS.
+- Three types of JOBS.
+    - Full Load: one time migration of whole data
+    - Full Load + CDC (Change Data Capture): After full load finished, it replicate changes between two.
+    - CDC Only migration: Uses external tooling for full load and use DMS for CDC.
+- DMS does not do schema conversion. Schema conversion tool is used.
+- No or little downtime.

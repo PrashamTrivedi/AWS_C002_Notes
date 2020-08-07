@@ -1,10 +1,14 @@
 const showdown = require('showdown')
 
 
-
-const converter = new showdown.Converter({tables: true, strikethrough: true, openLinksInNewWindow: true, metadata: true})
+const plugin = {
+    type: 'output',
+    regex: new RegExp(`<h(.*) id="(.*)">`, 'g'),
+    replace: `<button onClick=\"copyId('$2')\"><span class="material-icons">link</span></button><h$1 id=$2>`
+}
+const converter = new showdown.Converter({tables: true, strikethrough: true, openLinksInNewWindow: true, metadata: true, extensions: [plugin]})
 const fs = require('fs')
-const {create} = require('domain')
+
 
 module.exports.exportHtml = () => {
     const currentDir = process.cwd()
@@ -16,6 +20,7 @@ module.exports.exportHtml = () => {
         const createdOn = fs.statSync(file).birthtime
         const updatedOn = fs.statSync(file).ctime
 
+
         let htmlData = converter.makeHtml(fileData)
         htmlData = htmlData.split(".md").join(".html")
         const metadata = converter.getMetadata()
@@ -24,6 +29,7 @@ module.exports.exportHtml = () => {
             fs.mkdirSync(htmlPath)
         }
         fs.copyFileSync('./style.css', `${htmlPath}/style.css`)
+        fs.copyFileSync('./functions.js', `${htmlPath}/functions.js`)
         const fileName = `${file.replace('.md', '.html')}`
         filesArr.push(`
         <li class="navLinks">
@@ -39,8 +45,10 @@ module.exports.exportHtml = () => {
                                 <title>
                                 ${title}
                                 </title>
+                                <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
                                 <link href="https://fonts.googleapis.com/css2?family=Roboto&family=Roboto+Condensed&display=swap" rel="stylesheet">
                                 <link rel="stylesheet" href="style.css">
+                                <script src="functions.js"></script>
                             </head>
                             <body>
                                 <div >
@@ -59,7 +67,10 @@ module.exports.exportHtml = () => {
     const index = `
     <html>
         <head>
-             <link rel="stylesheet" href="style.css">
+            <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+            <link href="https://fonts.googleapis.com/css2?family=Roboto&family=Roboto+Condensed&display=swap" rel="stylesheet">
+            <link rel="stylesheet" href="style.css">
+            <script src="functions.js"></script>
         </head>
         <body> 
             <h1>Welcome to Prasham's notes.</h1>

@@ -17,8 +17,6 @@ module.exports.exportHtml = () => {
 
     fs.readdirSync(currentDir).filter(file => file.endsWith('.md') && !file.startsWith('readme')).forEach(file => {
         const fileData = fs.readFileSync(file).toString()
-        const createdOn = fs.statSync(file).birthtime
-        const updatedOn = fs.statSync(file).ctime
 
 
         let htmlData = converter.makeHtml(fileData)
@@ -36,7 +34,6 @@ module.exports.exportHtml = () => {
             <div>
             <a href="./${fileName}">${title}</a>
             </div>
-            Created on: <b>${createdOn.getDate()}/${createdOn.getUTCMonth() + 1}/${createdOn.getFullYear()}</b>, Last modified on: <b>${updatedOn.getDate()}/${updatedOn.getUTCMonth() + 1}/${updatedOn.getFullYear()}</b>
         </li>
         `)
         const post = `

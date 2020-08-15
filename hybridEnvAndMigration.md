@@ -97,3 +97,77 @@ title: Hybrid Environment And Migration
 - Transit Gateways can be shared with other AWS accounts using `AWS RAM (Resource Access Manager)`.
 - With TGW, network settings are much less complex.
 
+
+# AWS Storage Gateway 
+- A virtual storage appliance which is designed to run within an existing virtual environment either on-premisis or in data center.
+- Extend file or volume storage into AWS.
+- Allows extending capacity on AWS.
+- Allows keeping volumes locally and their backups in AWS.
+- Migrate Tape Backups to AWS.
+- Allows us to migrate existing infrastructure to AWS.
+- Runs in three main modes.
+    - Tape Gateway mode (VTL mode). 
+        - This configures storage gateway to look like tape drive, library and a tape shelf.
+        - Stores virtual tapes in [S3 and Glaicer.](./s3.md#s3glacier)
+        - Active tapes are stored in S3 for quick access and archival data is stored in Glacier.
+        - Tapes can have size of 100 GiB to 5 TiB.
+        - 1 PB storage can be configured locally and unlimited number of tapes can be archived to Glacier.
+    - File mode 
+        - Lets us create File shares and offers them using SMB or NFS.
+        - File storage baked by S3 objects.
+    - Volume Mode (Gateway Cached/Stored)
+        - Storage Gateway presents block storage
+        - Like [EBS](./ec2.md#ebs) but running on Premises.
+        - Block storage backed by S3 and EBS snapshots.
+        - Volume Gateway Stored:
+            - Starts with local storage gateway on premises.
+            - Has local storage and upload buffer.
+            - Can create upto 32 volumes in total.
+            - Each volume can have 16Tb in size.
+            - Primary copy is on premise.
+            - Backup happen asyncronously and backed up as EBS snapshots.
+            - Ideal for migrations and disaster recovery and continuity.
+        - Volume Gateway Cached:
+            - Primary data is stored in AWS.
+            - Frequently stored data is cached locally.
+            - Ideal for extending storage to AWS.
+            - All the other details are same as Volume Gateway Stored.
+
+- Storage gateway communicates AWS via HTTPS using a public endpoint.
+- Objects transferred via storage gateway are visible in S3 just like regular uploads. 
+- Lifecycle policies can be applied on them and they can be transferred to different classes.
+
+
+# Snowball/Edge/Snowmobile
+- Designed to move large amount of Data Into and Out of AWS.
+- Physical Storage Devices, either in suitcase or truck.
+- Order from AWS as empty, load the data and return. OR
+- Order from AWS with data, empty the data and return.
+
+## Snowball
+- A Device which we order from AWS, Log A Job and get the device delivered.
+- Encryption at rest using KMS.
+- 50 TB or 80 TB storage Capacity.
+- 1 Gbps (RJ45 1Gbase-TX) or 10 Gbps(LR/SR) network is required where snowball is being delivered.
+- **10 Tb to 10 Pb economical range data using multiple devices.**
+- **Multiple devices delivered to multiple premises.**
+- **Only Storage**
+
+## Snowball Edge
+- **Both Storage and Compute**.
+- **Larger Capactiy compared to snowball**.
+- 10 Gbps (RJ45), 10/25 Gbps(SFP), 45/50/100+ Gbps (QSFP+). 
+- Storage optimised, 80TB,24v CPU, 32 Gb Ram,1 TB SSD (with EC2).
+- Compute optimised, 100 TB+ 7.68 NVME storage, 52v CPU and 208 GB ram.
+- Compute optimised with GPU.
+- Snowball is older generation. 
+- **Ideal for remote sites or where data processing on ingestion is needed.**
+
+## Snowmobile.
+- Portable Data Center within a shipping container **on a truck**.
+- **Literally a truck, delivered to premises**. (Whoa emoji...)
+- Specially ordered from AWS. Not available everywhere.
+- **Ideal for single location where 10PB+ data is required**.
+- Upto 100PB per snowmobile.
+- This is driven to our location and expects to connect with our resources for data transfer.
+- **Single track, not economical for <10 PB migration or multi site migration**. 

@@ -72,7 +72,7 @@ title: Notes on VPC
 
 ### Routing table.
 - **Destination**: Destination denoted by IP CIDR. 
-- **Target**: Target of destination, it either points at AWS Gateway or local.Value  `local` means VPC itself.
+- **Target**: Target of destination, it either points at AWS Gateway or local. Value `local` means VPC itself.
 
 
 
@@ -147,36 +147,70 @@ title: Notes on VPC
 - NAT Instances can use Security Groups as well as NACLs, while NAT Gateways only use NACLs.
 - **All IPV6 Addresses inside AWS are publically routable**.
 
+# VPC Flow Logs
+- Essential diagnostic tool for complex networks within AWS.
+- Capture packet meta-data, not packet contents.
+- For pokcet contents we need packet sniffer.
+- When Applied to VPC: Applied to all network interfaces of that VPC.
+- When Applied to Subnet: Applied to all network interfaces of subnet.
+- Can be applied to interfaces directly and only this interface will be monitored.
+- Flowlogs are not realtime.
+- Can be configured for Cloudwatch or S3 Destinations. Read more about their trade-offs [here for s3](https://docs.aws.amazon.com/vpc/latest/userguide/flow-logs-s3.html) and [here for CloudWatch](https://docs.aws.amazon.com/vpc/latest/userguide/flow-logs-cwl.html)
+- To and From Meta-data apis (169.254.169.254), 169.254.169.253, DHCP, Amazon DNS Server and Amazon Windows licence logs are not covered.
 
+# Egress only Internet Gateway
+- Only allows connection to be initiated from inside a VPC to outside.
+- IPV4 addresses can be private or public.
+- NAT Gateway only allows IN connections: Allows public services to send messages via NAT Gateway to private instances in EC2 instance.
+- IPV6 allows all IPs as public. Can be routable to and from public internet.
+- Egress only is outbound ony for IPV6. It allows the connection to be initiated from private instances and get response back, but it doesn't allow public internet to connect to private instance.
+- Egress only gateways are HA by default across All AZs.
+- It scales based on traffic flowing through it.
+- We need to configure Route Tables to configure default IPV6 route of `::/0` to flow with Egress only internet gateway as target.
+- Egress only Internet Gateway works with IPV6 only.
 
+# VPC Endpoints
 
+## Gateway Endpoints
+- Provide private access to support AWS services like S3 and DynamoDb.
+    - Means private only respource inside a vpc or any resource inside private VPC to access supported aws services directly.
+- We create a gateway endpoint, the endpoint is created per service, per region.
+- When we allocate a gateway endpoint to a particular subnet, a prefix list added to route table of that subnets that uses gateway endpoint as target.
+- The prefix list is kept updated by AWS.
+- The network request having prefix list exists to public sservice via Gateway Endpoints and not via Internet Gateway.
+- Highly available across all AZs by default.
+- Endpoint policy is used to control what can be accessed.
+- It's regional only. Can't be used for cross regional services.
+- Using gateway endpoints we can restrict S3 Buckets to be accessed only from given private VPC. So these bucket can't be leaked.
+- Gateway endpoints can be only accesed from the VPC, anything outside that VPC can't access Gateway endpoint of that VPC.
 
-# Networking Refresher
-- IP Networks are split in 5 classes. 
-    - A Range: 0.0.0.0 to 127.255.255.255
-        - 128 Class A networks can be assigned (Each Entity assigned gets 16.8 Million IPs)
-        - from 0.X.X.X to 127.X.X.X
-        - Alloted entities control 3 bits of Address
-        - /8 in CIDR
-    - B Range: 128.0.0 to 191.255.255.255
-        - 16,000 networks can be assigned (Each entity gets 65,536 IPS)
-        - 128.0.X.X, 128.1.X.X to 191.255.X.X 
-        - Alloted Entities control 2 bits of Address
-        - /16 in CIDR
-    - C Range: 192.0.0.0 to 223.255.255.255
-        - 256 Addresses per network
-        - Alloted Entities cotrol only last bit of address.
-        - /32 in CIDR
-    - D & E Ranges are ignored for SAA
+## Interface Endpoints
+- Just like gateway endpoints, interface endpoints provide private access to public services. 
+- Interface Endpoints provide access anything but S3 and DynamoDB. These are both handled by Gateway endpoints.
+- They are not highly available by default, they're added to subnets 
+- For HA, we need one Interface Endpoint to one subnet in each AZ.
+- Network access can be controlled via Security Groups. Which is not availabe in Gateway Endpoints.
+- Just like Gateway Endpoints, Endpoint Policies decide what can be accessed via interface endpoints.
+- Interface endpoints work with TCP and IPV4 only.
+- Interface endpoints use PrivateLink technology.
+- PrivateLink will be helpful to inject any third party services into private VPC without additional network admin overhead.
+- They primarily use DNS.
+- Endpoint provides new service endpoint DNS.
+    - Regional DNS names: Works with AZ to access the service, highly available and simple.
+    - Zonal DNS: One specific interface in one specific zone. 
+- Apps can use given DNS or..
+- Use `PrivateDNS`: Associate R53 private hosted zone with VPC. Overrides default DNS name.
 
-- Certain Ranges are allocated for private use. 
-    - 1 Class A (10.0.0.0 to 10.255.255.255)
-    - 16 Class B (172.16.0.0 to *172.31*.255.255)
-    - 256 Class C (192.168.0.0 to 192.168.255.255)
-
-## CIDR (Classles inter-domain routing)
-- Network Address + / + prefix (size of network.)
-- Prefix of one nuber is half than prefix of the number before it.
-- E.g. Prefix of 16 have double the networks than 17 and half the networks than 15s.
-- Spliting a network of IPs to smaller networks using prefixes is called subnetting.
-    - E.g. Splitting the range of ips of /16 to 4 networks of /18 is called subnetting.  
+# VPC Peering
+- Private, direct and encrypted network link between two VPCs.
+- One connection links two and only two VPCs.
+- Connections can not be transitive.
+    - i.e. If VPC A is peered to VPC B and VPC B peered to VPC C, there is no direct implicit connection from VPC A to VPC C. 
+    - To connect VPC A and VPC C, they have to be explicitly peered.
+- Works in same or cross region and same or cross accounts.
+- (Optional) Public hostnames in peered VPCs can resolve to private IP addresses.
+    - Means we can have same DNS name to locate services whether they're in peered VPCs or not.
+- Same region Security Groups can reference peer Security Groups.
+- We create a logical gateways in both VPC.
+- Routing configuration is needed, Security Groups and NACLs filters are still applied. 
+- IP Address CIDR for two VPCs invloving in Peering can not overlap.

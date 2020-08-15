@@ -69,6 +69,7 @@ title: Notes on VPC
             - `10.160.0.0/16` has setting B and 
             - `0.0.0.0/0` (Public access) has setting C. 
         - In this case setting A is applied because this entry is more narrowly downed to IP, indicated by higher prefix.
+- In the case of same range, where one entry is static and other is [dynamic routing](./hybridEnvAndMigration.md#staticvsdynamicvpn), static routing will be preferred.
 
 ### Routing table.
 - **Destination**: Destination denoted by IP CIDR. 

@@ -171,3 +171,135 @@ title: Hybrid Environment And Migration
 - Upto 100PB per snowmobile.
 - This is driven to our location and expects to connect with our resources for data transfer.
 - **Single track, not economical for <10 PB migration or multi site migration**. 
+
+
+# AWS Directory Service.
+
+## Directory in General.
+- Provides Managed Directory, a store of users, objects and other configuration.
+- Directories store identity and asset related information. 
+    - Like users, groups, computers, servers, file shares etc with a structure like domain = inverted tree.
+- Multiple trees can be grouped into a forest.
+- Commonly used in windows environments.
+- Sign-in to multiple devices with same username/passwords provides centralized management for assets.
+- E.g. Microsoft Active directory domain service (AD DS) or open-source SAMBA.
+
+## AWS Directory Services.
+- AWS Managed implementation of directory service.
+- Private service: Runs within VPC.
+- Provides HA when we deploy this into multiple AZs.
+- Windows EC2 instances can be part of directory, by using the directory and signin feature.
+- Some AWS Services (Like AWS Workspace) require directory services.
+- Can be isolated directory within AWS.
+- Can be integrated with existing on-premises system.
+- Can be in Connection mode where it proxies connection back to on-premises dictionary.
+
+## Directory Mode
+- Simple AD Mode:
+    - Cheapest and simplest way.
+    - Standalone opensource directory based on Samba 4.
+    - Provides lightweight compatibility with AD DS.
+    - Two different sizes: Upto 500 users for small and upto 5000 users for large size.
+    - Anything can join SAMBA can join Simple AD mode directory.
+    - Designed to used in isolation.
+    - Can not connect with On-Premises system.
+- Managed Microsoft AD:
+    - When you want to have direct presence inside AWS but also have on-premises directory. 
+    - Architecturaly it's similar to Simple AD.
+    - Can create a trust relationship with existing on-premises directory.
+        - A trust relationship creation needs to occur in private networking.
+    - Resiliant. Even if VPN fails services in AWS can still access local directory.
+    - Full microsoft AD DS running in 2012 R2 mode.
+    - Can directly support any appliction which require AD DS services.
+- AD Connector mode:
+    - Only a proxy.
+    - Establishes a connection between services requiring Directory services and on premises directory using a private connection.
+    - Consider this as a pointer pointing to on-premises directory over private network. This pointer is used by services in AWS.
+    - It's only a proxy.
+    - If private connectivity fails, AD connector mode is interrupted, thus interrupting services on AWS.
+
+## Chosing modes.
+- Simple AD should be default. 
+- Move to Microsoft AD for any aws app which needs microsoft AD DS or you need trust relationship with existing on-premises AD DS.
+- Chose AD Connector only if you need AWS Service which needs a directory but for any reason you don't want to store directory on cloud. Proxies to your own on-premises Directory.
+
+# Datasync.
+- Data transfer service To and From AWS.
+- Used for Migrations, Data Processing, Transfers, Archival/Cost effective storage, Disaster recovery or business continuation planning.
+- Designed to work at huge scale.
+- Keeps metadata.
+- Including Built-in data validation.
+- Scalable: 10Gbps per agent (~100 TB per day).
+- Bandwith limiters to avoid link saturation.
+- Supports incremental and scheduled transfer.
+- Supports Compression and Encryption.
+- Automatic recovery from transit errors.
+- AWS Service integration like S3, EFS, FSx. Also support service to service migration.
+- Pay as you use. Per GB Cost of data moved.
+- In NAS or SAN storage device on-premises, we install DataSync agent.
+- The agent runs on a virtualization platform (Like VMVare) and communicates with AWS Datasync endpoint.
+- Communitactes with NAS or SAN with NFS or SMB protocol.
+- Communication of Datasync agent and AWS is encrypted in transit.
+
+## Datasync components
+- **Task**: A job within datasync. Defines what being synced, how quickly, scheduling, throttling, FROM and TO. 
+- **Agent**: A software used to read and write to on premises data using SMB or NFS.
+- **Location**: Every task has two location FROM and TO. 
+    - Locations include Network File System (NFS), Server Message Block (SMB), Amazon EFS, Amazon FSx and Amazon S3
+
+
+# FSx for Windows File Server
+- Provides fully managed native windows file servers/shares.
+- File Shares are unit of consumption.
+- Designed for integration with Windows Environments.
+- Integrates with Directory service or Self-Managed AD.
+- Resiliant and HA system.
+- Can be deployed with Single or Multi AZ within VPC.
+- Uses ENI(Elastic Network Interface) within VPC.
+- The backed uses replication, to avoid hardware failure.
+- Can perform Backups, On demand and scheduled backups from AWS Side.
+- Accessible using VPC, Peering, VPN or DX.
+- Generally EFS is used for anything Linux (EC2 or on-premises).
+- And FSx is used for anything Windows (EC2 or on-premises).
+- FSx needs to be connected to a directory for user store.
+- FSx can directly connect Active Directory on-premises even without AD Connector Mode.
+- AWS workspace can use FSx as shared file system.
+- Supports at-rest encryption using KMS and allows us to enforce encryption in transit.
+- Supports Shadow copying (useful for file versioning).
+- Performance:
+    - 8MB/S to 2GB/S
+    - 100ks IOPS
+    - < 1MS latency.
+
+## Key fetures and Benifits.
+- VSS: User driven files/folder restores. Unique to FSx.
+- **Native file system accessible using SMB.**
+- **Uses windows permission model**.
+- Supports Distributed File System (DFS). 
+    - We can natively scale out file systems inside Windows Environment.
+- Managed service: No file server admin.
+- **Integrated with DS or Own directory**.
+
+## FSx for Lustre.
+- Managed implementation of Lustre file system - A file system designed specifically for high performance computing. 
+- Support Linux based instances running in AWS. 
+- Supports POSIX style permissions for file syste,
+- Designed for use cases like: ML, Big Data, Financial Modelling.
+- 100's of Gb/S throughput and sub millisecond latency.
+- Scratch deployment mode: Highly optimised for short term & fast computing, but does not provide replication.
+- Persistent deployment mode: Longer term, HA in one AZ and self-healing.
+- Accessible over VPN or Direct Connect.
+- Connected using same technologies like EFS or FSx for windows.
+- Data that needs to be processed should be in File System.
+- But when we link a repository like S3, data is loaded lazily into file system from repository as needed.
+- Data can be exported back to repository using `hsm_archive` command.
+- There is no automatic sync between FS and repository.
+- File metadata stored in Metadata storage targets (MST).
+- Objects are stored in Object Storage Targets (OST)
+    - Each OST is 1.17TiB in size.
+- Baseline performance is based on file size.
+- Size: Min 1.2TiB and then in increments of 2.4 TiB.
+- For Scratch: 200MB/S per TiB of storage.
+- For Persistance: Three levels of 50MB/S, 100MB/S and 200 MB/S per TiB of storage.
+- Burst upto 1300MB/S per TiB
+ 

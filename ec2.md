@@ -88,6 +88,7 @@ title: Notes about EC2
     - Regardless of instance state. Instance can be shutdown for a month but still billed for that month.
 - Max 80K IOPS for instance and 64K IOPS per volume (if volume is `io1`)
 - Max 2375 MB/s throughput for instance and 1000 MiB/s per volume (if volume is `io1`)
+- EBS volumes support live configuration changes while in production which means that you can modify the volume type, volume size, and IOPS capacity without service interruptions.
 
 ## Volume Types
 - `gp2`: General purpose SSD.

@@ -6,15 +6,15 @@ title: Notes on VPC
 
 - Two types of VPCs. One default and other customizable.
 - Regionally isolated and regionally resiliant.
-- Each VPC is isolated with each other by default. Nothing is allowed.
-- VPCs are created in reagion and operates from all AZs of that region.
+- Each VPC is isolated with each other by default. No communication is allowed.
+- VPCs are created in region and operates from all AZs of that region.
 - Each region can have one default VPC.
 - Each region can have many customisable VPC.
 - Default VPC is rigid. While Custom VPCs are as name suggests, customisable.
     - Customizations inculde: IP range, multi tier VPCs, networking options etc
 - Default VPC can be recreated.
 - IP Range (CIDR) of Default VPC 172.31.0.0/16. 
-- Subnet has their own ip range of /20 based on number of subnets.
+- Subnet has their own IP range of /20 based on number of subnets.
 - Lesser the number after /, more IPs are available. For /16 they have 65,536 IPs available, for /20 they have 4,096 IPs available.
 - /16 can have double IPs than /17 and can half IPs than /15. 
 - IGW (Internet Gateway-Allows internet to communicate to VPC & Vice-versa), Security Group (SG), Network ACL (NACL) come pre-configured in default VPC.
@@ -178,7 +178,7 @@ title: Notes on VPC
 - We create a gateway endpoint, the endpoint is created per service, per region.
 - When we allocate a gateway endpoint to a particular subnet, a prefix list added to route table of that subnets that uses gateway endpoint as target.
 - The prefix list is kept updated by AWS.
-- The network request having prefix list exists to public sservice via Gateway Endpoints and not via Internet Gateway.
+- The network request having prefix list exists to public service via Gateway Endpoints and not via Internet Gateway.
 - Highly available across all AZs by default.
 - Endpoint policy is used to control what can be accessed.
 - It's regional only. Can't be used for cross regional services.

@@ -49,7 +49,7 @@ title: Notes about EC2
 
 ## Type of storage
 - Direct (local) attached storage: Storage directly connected to a machine (like HDD on laptop or Desktop), in case of EC2 it's a storage on EC2 host.
-    - Superfast, but can be lost on hardware problems or when instance is moved between hosted.
+    - Superfast, but can be lost on hardware problems or when instance is moved between hosts.
 - Network attached storage: Volumes delivered over the network. 
     - Slower, but highly resiliant and can survive failure
 - Ephemeral storage: Temporary Storage.
@@ -217,7 +217,7 @@ title: Notes about EC2
 
 ## EC2 Network & DNS Architecture
 - Each instnace has atlease one Elastic Network Interface or ENI.
-- We can have more than one ENI, which can be on other Subnet. But all ENI should be in same AZ.
+- We can have more than one ENI, which can be on other Subnet. **But all ENI should be in same AZ**.
 - ENI can have properties 
     - MAC address
     - Primary IPV4 private IP from available subnet IP range. 
@@ -297,7 +297,7 @@ title: Notes about EC2
 
 
 ### Reserved Instances.
-- Upto 75% discuout. Require Commitment.
+- Upto 75% discount. Require Commitment.
 - 1 or 3 years, All Upfront, Partial Upfront or No Upfront. 3 years have better discount.
 - 3 years + All Upfront offer better discount. 
 - If not paying all upfront, we have to pay hourly rate **regardless of instance running or not**.

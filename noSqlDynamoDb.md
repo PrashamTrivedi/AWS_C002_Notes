@@ -20,7 +20,7 @@ title: NO SQL and Dyanamo DB
 - Simple Primary Key or Partition Key and Composite key: Combination of Partition Key and Sorting Key.
 - All items in the table must have primary key, and they must have unique values.
     - For Partition Key, all values in partition keys must be unique.
-    - For Composite KEy, combination of Partition Key and Sort Key must be unique.
+    - For Composite Key, combination of Partition Key and Sort Key must be unique.
 - Item can max be 400Kb in size. (Include PK, Attribute Keys and Values).
 - We configure a table with provisioned capacity or on-demand capacity.
 - Here capacity means speed.

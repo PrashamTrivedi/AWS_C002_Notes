@@ -3,8 +3,8 @@ const showdown = require('showdown')
 
 const plugin = {
     type: 'output',
-    regex: new RegExp(`<h(.*) id="(.*)">`, 'g'),
-    replace: `<button onClick=\"copyId('$2')\"><span class="material-icons">link</span></button><h$1 id=$2>`
+    regex: new RegExp(`<h(.*) id="(.*)">(.*)</h(.*)>`, 'g'),
+    replace: `<h$1 id=$2><a href='#$2' class="refLink">$3</a></h$4>`
 }
 const converter = new showdown.Converter({tables: true, strikethrough: true, openLinksInNewWindow: true, metadata: true, extensions: [plugin]})
 const fs = require('fs')
@@ -32,7 +32,7 @@ module.exports.exportHtml = () => {
         filesArr.push(`
         <li class="navLinks">
             <div>
-            <a href="./${fileName}">${title}</a>
+            <a href="./${fileName}" target="_blank">${title}</a>
             </div>
         </li>
         `)
@@ -42,13 +42,13 @@ module.exports.exportHtml = () => {
                                 <title>
                                 ${title}
                                 </title>
-                                <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
                                 <link href="https://fonts.googleapis.com/css2?family=Roboto&family=Roboto+Condensed&display=swap" rel="stylesheet">
                                 <link rel="stylesheet" href="style.css">
                                 <script src="functions.js"></script>
+                                
                             </head>
                             <body>
-                                <div >
+                                <div id="links">
                                     <a class="navLinks" href="./index.html">Home</a>
                                     <a class="navLinks" href="https://prashamhtrivedi.in">Parent Site</a>
                                     <a class="navLinks" href="https://github.com/PrashamTrivedi/AWS_C002_Notes">Repository and Original Notes in Markdown</a>
@@ -64,7 +64,10 @@ module.exports.exportHtml = () => {
     const index = `
     <html>
         <head>
-            <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+         <meta name="HandheldFriendly" content="True">
+        <meta name="MobileOptimized" content="320">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="referrer" content="no-referrer">
             <link href="https://fonts.googleapis.com/css2?family=Roboto&family=Roboto+Condensed&display=swap" rel="stylesheet">
             <link rel="stylesheet" href="style.css">
             <script src="functions.js"></script>

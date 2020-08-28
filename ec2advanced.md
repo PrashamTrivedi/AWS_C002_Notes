@@ -14,7 +14,7 @@ This is the continuation of [EC2](./ec2.md).
 - EC2 just passes the data and OS tries to run the data as command, **there is no validation**.
     - Except OS should be able to understand that data as runnable command.
 - Userdata runs between launch state and running state. Means all user data process is done before EC2 is available for us to use.
-- Is there is a problem with user data. Instance is in bad config, there won't be any termination or stoppage.
+- If there is a problem with user data. Instance is in bad config, there won't be any termination or stoppage.
 - User data is not secure. Not good for long term credentials.
 - Max user data size is 16 KB.
 - Can modified when instance is stopped. When data is modified before instance start, new data will be available in User data, but **execution will only happen at launch**
@@ -135,5 +135,3 @@ This is the continuation of [EC2](./ec2.md).
 - Historically network is shared between regular app data and EBS. That adds load on network.
 - EBS Optimised means dedicated capacity for EBS.
 - Most instance support and have enabled by default.
-- 
-

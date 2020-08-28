@@ -1,6 +1,10 @@
 body{
   font-family: 'Roboto', sans-serif;
-
+  font-size:17px;
+    line-height:160%;
+    color:#1d1313;
+    max-width:700px;
+    margin:auto;
 }
 
 .navLinks{
@@ -15,3 +19,45 @@ code {
   margin: 2px;
 
 }
+
+ li {
+    margin-left: 20px;
+  }
+
+  ul li {
+    margin-left: 5px;
+  }
+
+  ul li {
+    list-style-type: disc;
+  }
+
+h1 {
+    font-size:35px;
+  }
+
+  h2 {
+    font-size:28px;
+  }
+
+  h3 {
+    font-size:22px;
+    margin-top:18px;
+  }
+
+  h1 a,h2 a,h3 a {
+    text-decoration:none;
+  }
+
+  h1,h2 {
+    margin-top:28px;
+  }
+#links {
+    display: flex;
+    justify-content: space-between;
+    margin: 10px 0 0 0;
+  }
+
+ .refLink:hover:before{
+content: '# ';
+ }

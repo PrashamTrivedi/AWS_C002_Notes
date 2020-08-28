@@ -50,7 +50,7 @@ title: Notes about load balancing
 - Rules: Host rules or path rules.
     - Host rules: Using host name (Subdomain) to use given target. 
         - E.g. `media.organization.com` will access a specific set of media server(s) and `blog.organization.com` will access another set of servers where blog database and app is stored.
-    - Path rukes: Using path to use given target.
+    - Path rules: Using path to use given target.
         - E.g. `organization.com/media` will access a specific set of media server(s) and `organization.com/blog` will access another set of servers where blog database and app is stored.
 
 ## Launch Configuration and Templates
@@ -120,7 +120,7 @@ title: Notes about load balancing
     - Good: 
         - All the positives of ALB added with https.
     - Bad:
-        - ALB and all EC2 instances the copy of SSL Certificate, which may not satisfy some requirements.
+        - ALB and all EC2 instances have the copy of SSL Certificate, which may not satisfy some requirements.
         - Compute is needed to encryption/decryption.
 - Passthrough
     - Client connects and NLB passes this secure connection to an instance.

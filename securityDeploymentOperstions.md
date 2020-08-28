@@ -1,5 +1,5 @@
 ---
-title: Notes on Security Deployment And Operations
+title: Notes on Security, Deployment And Operations
 ---
 
 # Secrets Manager

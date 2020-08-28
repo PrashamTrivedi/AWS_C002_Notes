@@ -31,4 +31,3 @@ title: Notes on Cloudtrail
 ## CloudTrail storage
 - Can be stored in S3 or in cloudwatch.
 - In S3 data is stored in compressed JSON format.
-- 

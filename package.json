@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/PrashamTrivedi/AWS_C002_Notes#readme",
   "devDependencies": {
+    "elasticlunr": "^0.9.5",
     "showdown": "^1.9.1"
   }
 }

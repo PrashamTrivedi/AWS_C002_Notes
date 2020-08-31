@@ -10,7 +10,7 @@ Responsibiltiy is shared between AWS and Customer.
 
 - E.g. In case of EC2, we are provided everything upto hardware, and from OS to App, we use EC2 for that (Like VM, OS, Storage, App, DB etc.).
 
-- E.g. In case of Lambfa, we are provided everything upto Storage, we use code and APP on top of that.
+- E.g. In case of Lamba, we are provided everything upto Storage, we use code and APP on top of that.
 
 - What are we provided is AWS's responsibility to make it secure, useful and available **to us**.
 

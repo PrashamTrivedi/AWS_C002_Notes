@@ -66,6 +66,14 @@ title: Notes on RDS.
 - Automated backups and manual backups.
 - Both use AWS managed S3 Buckets, which won't be visible to console, API or CLI.
 
+## RDS Monitoring
+- RDS' default metrics are for Instace which is used to host RDS. It gives us the metrics of the instance, not the Database itself.
+- To get metrics related to Database, we need **RDS Enhanced Monitoring**. 
+- Enhanced monitofing will export to cloudwatch in JSON format, which is stored for 30 days, can be changed with `RDSOSMetrics` log group.
+
+## IAM DB Authentication
+- Can authenticate DB with AWS IAM.
+- **Availabe only with MySQL and Postgres**.
 
 ### RTO vs RPO (Recovery Time Objective vs Recovery Point Objective)
 

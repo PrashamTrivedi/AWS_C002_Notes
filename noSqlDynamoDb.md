@@ -218,3 +218,4 @@ title: NO SQL and Dyanamo DB
 - Redis supports replication of data across multi AZs.
 - Redis supports read-replicas.
 - Redis supports Backup & Restore.
+- Authenticate the users using Redis AUTH by creating a new Redis Cluster with both the `--transit-encryption-enabled` and `--auth-token parameters` enabled.

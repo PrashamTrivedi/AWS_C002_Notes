@@ -180,6 +180,7 @@ title: Notes about EC2
 - Attached to EC2 host. 
 - Lost on instance resize, move or hardware failure.
 - High Performance.
+- **If an EC2 instance is baked with Instance store based root volume, it does not support STOP action**, it can only terminate.
 
 
 

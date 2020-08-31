@@ -80,3 +80,4 @@ title: Notes on CloudFront
 - Transits over AWS backbones. 
 - Global Accelerator can be used non HTTP(S) traffic while CloudFront can only be used for  http/s traffic.
 - Global Accelerator can't cache anything.
+

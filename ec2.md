@@ -222,8 +222,8 @@ title: Notes about EC2
 - We can have more than one ENI, which can be on other Subnet. **But all ENI should be in same AZ**.
 - ENI can have properties 
     - MAC address
-    - Primary IPV4 private IP from available subnet IP range. 
-        - Doesn't change for lifetime of the instance.
+    - **Primary IPV4 private IP from available subnet IP range.** 
+        - **Doesn't change for lifetime of the instance.**
     - 0 or more secondary private IP address. 
     - 0 or 1 public IP address. 
         - It's public for outside of VPC, inside VPC it's always private address.

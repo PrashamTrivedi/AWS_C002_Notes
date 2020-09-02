@@ -282,7 +282,7 @@ title: Hybrid Environment And Migration
 
 ## FSx for Lustre.
 - Managed implementation of Lustre file system - A file system designed specifically for high performance computing. 
-- Support Linux based instances running in AWS. 
+- **Support Linux based instances running in AWS.** 
 - Supports POSIX style permissions for file syste,
 - Designed for use cases like: ML, Big Data, Financial Modelling.
 - 100's of Gb/S throughput and sub millisecond latency.

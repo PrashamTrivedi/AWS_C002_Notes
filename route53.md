@@ -8,6 +8,7 @@ title: Notes on Route 53
 - Host Zones and managed Nameservers
 - Global service, single DB
 - Globally resiliance (Data copied to all regions)
+- Route 53’s DNS services does not support DNSSEC at this time
 
 ## R53 Public hosted zones
 - A R53 Hosted Zone is DNS database for a domain.

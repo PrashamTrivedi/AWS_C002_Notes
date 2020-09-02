@@ -6,12 +6,11 @@ title: Notes on IAM
 
 - IAM users are identity used for anything requiring long term access. E.g. Humans, Apps 
 
-
+## Order of Rules
 - Rules applied in this priority order
     - Explicit Deny
     - Explicit Allow
     - Implicit Deny
-
 - If you don't do anything, default mode is implicit deny. All AWS Non Admin access are Implicit Deny by default.
 - If you allow anything via IAM policy, it's explicit allow, **unless you're explicitly denied** something via IAM Policy.
 
@@ -82,3 +81,6 @@ title: Notes on IAM
     - E.G.: If SCP allows S3,ElastiCache and EC2 Access and IAM allows S3,RDS and EC2 access, user can only use S3 and EC2. 
     - Though user can use RDS by IAM grants, but SCP has implicit deny on RDS user can't use RDS when accessing through organization.
     - Same way user can use ElastiCache by SCP grants, but IAM has implicit deny on ElastiCache user can't use ElastiCache.
+
+## IAM Certificate Store
+- Allows 3rd Party certificate to be uploaded to IAM.

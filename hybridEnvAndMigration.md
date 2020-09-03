@@ -32,7 +32,7 @@ title: Hybrid Environment And Migration
 - VPN connection between VGW and CGW.
 - VGW have multiple physical endpoints, these are devices in different physical endpoints in different availablility zones, with public IPV4 addresses.
 - VGW is highly available service. **The rest of site to site VPN can not be highly available**.
-- A VPN connect to VGW can create two tunnels one between each endpoint and the other with physical and on-premise router.
+- A VPN connect to VGW can create two tunnles one between each endpoint and the other with physical and on-premise router.
 - A tunnle is encrypted channel through which data can flow between VPC and Physical router.
 - As long as one VPC tunnle is active, two networks are connected.
 - If a CGW fails, whole operation fails.

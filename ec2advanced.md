@@ -17,7 +17,7 @@ This is the continuation of [EC2](./ec2.md).
 - If there is a problem with user data. Instance is in bad config, there won't be any termination or stoppage.
 - User data is not secure. Not good for long term credentials.
 - Max user data size is 16 KB.
-- Can modified when instance is stopped. When data is modified before instance start, new data will be available in User data, but **execution will only happen at launch**
+- Can be modified when instance is stopped. When data is modified before instance start, new data will be available in User data, but **execution will only happen at launch**
 - User data must be in base 64 when sent to EC2. Console UI automatically does that.
 
 ## Boot time to service time.

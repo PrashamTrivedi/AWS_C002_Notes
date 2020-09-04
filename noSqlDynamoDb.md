@@ -15,7 +15,7 @@ title: NO SQL and Dyanamo DB
 - Event driven integration ... Do things when data changes.
 
 
-## DynampDB Tables.
+## DynamoDB Tables.
 - Table is grouping of items sharing primary key.
 - Simple Primary Key or Partition Key and Composite key: Combination of Partition Key and Sorting Key.
 - All items in the table must have primary key, and they must have unique values.

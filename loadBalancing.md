@@ -74,7 +74,7 @@ title: Notes about load balancing
 - Provision (Upto max level) or Terminate(Upto min level) instances to keep the desired level.
 - Provision and termination can be done manually or automatically using **scaling policies**.
 - ASG tries to distribute in all AZs
-    - E.g. When our desired need is 6 targets, and we have three AZs, ASG tries put two targets in each AZ.
+    - E.g. When our desired need is 6 targets, and we have three AZs, ASG tries to put two targets in each AZ.
 - Three types of scaling policies
     - No Scaling: Manual
     - Scheduled scaling: Scale up or down based on time
@@ -87,7 +87,7 @@ title: Notes about load balancing
             - And when CPU Load below 60% remove one instnce. Between 40-60% remove two instances and below 40% remove three instances
             - Almost always prefered to simple scaling.
         - Targeted Scaling: Let us define ideal amount of something. When we define it, group will scale automatically to stay at that amount.
-- Cooldown period: How long to wait (in seconds) between two scaling actions. 
+- Cooldown period: How long to wait (in seconds) between two scaling actions. **Default Cooldown period is 300 seconds**
 - Self healing: When an EC2 instance fails, instance notifies to ASG and ASG instructs to provide brand new instance in place of failed instance.
 - Trick to HA: Define an instance with launch template, create an ASG with min max and desired target as 1. When EC2 instance fails, it can launch another instance in same AZ and if it's not possible in another AZ. Thus there will always be one instance available.
 - ASG instances can be automatically added or removed from target groups, thus automatically configured with ALBs.

@@ -58,7 +58,7 @@ title: Notes on VPC
 - Routes traffic between subnets.
 - Controlled by route tables, and each subnet has one router.
 - Main route table is subnet default.
-- Subnet can has only one route table with it. But one route table can be associated with multiple subnets.
+- Subnet can have only one route table with it. But one route table can be associated with multiple subnets.
 - When IP Packet (A Packet contains source, destination and data) leaves Subnet, router table is used.
 - Entry in destination is matched with destination source of IP Packet.
 - On multiple matches, entry with local route is matched first, for anything else entry with higher prefix value is matched.

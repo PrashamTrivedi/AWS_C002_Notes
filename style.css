@@ -115,3 +115,25 @@ content: '# ';
     border: 1px solid #ccc;  
   }
 }
+
+@media (prefers-color-scheme: dark) {
+	                       *, #nav h1 a {
+	                           color: #FDFDFD;
+	                       }
+	
+	                       body {
+	                           background: #121212;
+	                       }
+	
+	                       pre, code {
+	                           background-color: #262626;
+	                       }
+	
+	                       #sub-header, .date {
+	                           color: #BABABA;
+	                       }
+	
+	                       hr {
+	                           background: #EBEBEB;
+	                       }
+	                   }

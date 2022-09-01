@@ -3,6 +3,9 @@
 # and commit this file to your remote git repository to share the goodness with others.
 
 tasks:
+  - name: Setup git
+    command: ~/gitconfig-provider apply
   - init: npm install && npm run build
 
-
+vscode:
+  extensions: ritwickdey.LiveServer

@@ -1,5 +1,5 @@
 name: Create and upload HTML Files
-on: 
+on:
   push:
     branches:
       - master
@@ -13,7 +13,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v1
         with:
-          node-version: '12.x'
+          node-version: "12.x"
       - name: Install dependencies
         run: npm install
       - name: Run build
@@ -23,8 +23,8 @@ jobs:
         with:
           name: notes
           path: html
-      - name: Deploy to S3
-        uses: jakejarvis/s3-sync-action@master
+      - name: S3 Sync with cloudfront cache invalidation
+        uses: kefranabg/s3-sync-action@v0.1.0
         with:
           args: --acl public-read --delete
         env:
@@ -33,4 +33,5 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET }}
           AWS_REGION: ${{ secrets.AWS_REGION }}
           DEST_DIR: ${{ secrets.DEST_DIR }}
+          DISTRIBUTION_ID: ${{ secrets.DISTRIBUTION_ID }}
           SOURCE_DIR: "html"

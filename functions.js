@@ -16,6 +16,7 @@ function search() {
     const search = []
 
     for (const result of searchResult) {
+        console.log(JSON.stringify(result))
         const searchRef = searchData.documentStore.docs[result.ref]
         if (searchRef) {
             search.push(` <li class="navLinks">

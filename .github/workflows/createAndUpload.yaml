@@ -23,8 +23,8 @@ jobs:
         with:
           name: notes
           path: html
-      - name: S3 Sync with cloudfront cache invalidation
-        uses: kefranabg/s3-sync-action@v0.1.0
+      - name: Deploy to S3
+        uses: jakejarvis/s3-sync-action@master
         with:
           args: --acl public-read --delete
         env:

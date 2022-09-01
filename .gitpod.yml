@@ -8,4 +8,5 @@ tasks:
   - init: npm install && npm run build
 
 vscode:
-  extensions: ritwickdey.LiveServer
+  extensions: 
+  - ritwickdey.LiveServer
